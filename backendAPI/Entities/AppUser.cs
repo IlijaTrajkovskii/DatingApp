@@ -8,7 +8,11 @@ public class AppUser
     public required string displayName { get; set; }
 
     public required string Email { get; set; }   // public string? Email bi ostavilo da e nullable no treba proverka podocna
+                              
                                                 
+    public required byte[] PasswordHash { get; set; }
 
+    public required byte[] PasswordSalt { get; set; }
+                                                
 }
 

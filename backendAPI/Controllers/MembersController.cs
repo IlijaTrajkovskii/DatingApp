@@ -7,9 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace backendAPI.Controllers;
 
 
-[Route("api/[controller]")] // localhost:5001/api/members
-[ApiController]
-public class MembersController(AppDbContext context) : ControllerBase // inicijalizirame konstruktor so dbcontext instanca
+ // localhost:5001/api/members
+public class MembersController(AppDbContext context) : BaseApiController // inicijalizirame konstruktor so dbcontext instanca
 {
 
     //endpoints 
