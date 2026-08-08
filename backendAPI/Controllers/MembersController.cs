@@ -1,6 +1,7 @@
 
 using backendAPI.Data;
 using backendAPI.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ public class MembersController(AppDbContext context) : BaseApiController // inic
         return members;
     }
 
-
+    [Authorize]
     [HttpGet("{id}")] // api/members/{id}   id=ilija-id
     public async Task<ActionResult<AppUser>> getMember(string id)
     {

@@ -7,15 +7,17 @@ using backendAPI.Entities;
 using Microsoft.AspNetCore.Mvc;
 using backendAPI.DTOs;
 using Microsoft.EntityFrameworkCore;
+using backendAPI.Interfaces;
+using backendAPI.Extensions;
 
 
 
 
-public class AccountController(AppDbContext context) : BaseApiController
+public class AccountController(AppDbContext context, ITokenService tokenService) : BaseApiController
 {
     
     [HttpPost("register")]  // odgovara na api/account/register
-    public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto)
+    public async Task<ActionResult<UserDtoResponse>> Register(RegisterDto registerDto)
     {
         if(await EmailExist(registerDto.Email)) return BadRequest("Email is already taken!");
 
@@ -32,13 +34,13 @@ public class AccountController(AppDbContext context) : BaseApiController
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        return user;
+        return user.toDto(tokenService);
     }
 
     [HttpPost("login")]  // api/account/login
-    public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+    public async Task<ActionResult<UserDtoResponse>> Login(LoginDto loginDto)
     {
-        var user = await context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.email); // moze da bide i null pa pravime proverka
+        var user = await context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.Email); // moze da bide i null pa pravime proverka
 
         if(user == null)
         {
@@ -47,7 +49,7 @@ public class AccountController(AppDbContext context) : BaseApiController
 
         using var hmac = new HMACSHA512(user.PasswordSalt); // go koristime istiot hash algoritam so kluc od najdeniot user
 
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.password)); // passwordot koj kako string e ispraten preku DTO
+        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password)); // passwordot koj kako string e ispraten preku DTO
 
         // Bidejki hashovite se kako bytes/niza mora vo for ciklus
 
@@ -59,7 +61,7 @@ public class AccountController(AppDbContext context) : BaseApiController
             }
         }
 
-        return user; 
+        return user.toDto(tokenService); // extension na static metoda 
     }
 
 
