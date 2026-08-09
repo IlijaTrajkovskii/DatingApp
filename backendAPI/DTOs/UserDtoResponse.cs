@@ -4,6 +4,7 @@ namespace backendAPI.DTOs;
 
 public class UserDtoResponse
 {
+    // koga kreirame userDtoResponse required properties mora da bidat dadeni
     public required string Id { get; set; }
     public required string Email { get; set; }
 

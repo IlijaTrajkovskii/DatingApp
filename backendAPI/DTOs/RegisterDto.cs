@@ -4,11 +4,11 @@ namespace backendAPI.DTOs;
 
 public class RegisterDto
 {
-    [Required]
+    [Required] 
     public string DisplayName { get; set; } = ""; // so prazno mesto e required
 
     [Required]
-    [EmailAddress]
+    [EmailAddress]  //validacija na podatoci sto stigaat vo api-to
     public string Email { get; set; } = "";
    
    [Required]
