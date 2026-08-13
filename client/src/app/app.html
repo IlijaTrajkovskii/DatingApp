@@ -1,41 +1,7 @@
+<app-nav> </app-nav>
 
-
-<div class="card bg-base-300 w-1/2 mx-auto pb-10 px-8 pt-2 mt-10 shadow-2xl mb-7 rounded-4xl">
-
-    <div class="text-3xl text-amber-500 text-center mb-5  ">{{title()}}</div>
-
-    <p class="">Here is the list of members:</p>
-
-    <ul class="list">
-         @for (member of members() ; track member.id)
-        {
-              <li class="list-row items-center border-b my-1 ">
-
-                 <img src="/user.png" alt="user avatar" class="size-12 rounded-2xl">
-                 <div>
-                    {{member.displayName}}
-                 </div>
-
-              </li>
-        }
-    </ul>
-
-
-</div>
+<app-home/>
 
 
 
-<button (click)="getMember('ilija-id')" class="btn btn-primary shadow-xl">
-    Get member 1
-</button>
-
-
-<!-- @if се користи за условно прикажување или криење делови од template-от. -->
-<!-- Proveruva dali selectedMember e null ili ne i prikazuva sodrzina soodvetno -->
- 
-@if(selectedMember(); as member) {
-    <h3>Selected member:</h3>
-    <p>ID: {{member.id}}</p>
-    <p class="text-3xl font-bold">Display Name: {{member.displayName}}</p>
-}
 
