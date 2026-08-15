@@ -3,7 +3,7 @@ import { inject, Service, signal } from '@angular/core';
 import { LoginCreds, RegisterCreds, User } from '../../types/user';
 import { tap } from 'rxjs';
 
-@Service()
+@Service()  // our service stays alive through out the whole lifecycle of the APP!
 export class AccountService {
 
     private http = inject(HttpClient);
@@ -37,8 +37,8 @@ export class AccountService {
     }
 
     setCurrentUser(user: User) 
-    {
-        localStorage.setItem("user", JSON.stringify(user))
+    {                                                       // cross-site scripting
+        localStorage.setItem("user", JSON.stringify(user)) // Rizik od XSS attack! NOT SAFE
         this.currentUser.set(user)
     }
 
