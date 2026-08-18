@@ -1,6 +1,7 @@
 using System.Text;
 using backendAPI.Data;
 using backendAPI.Interfaces;
+using backendAPI.Middleware;
 using backendAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// MIDDLEWARE
+
+
+// Configure the HTTP request pipeline. MIDDLEWARE
+
+app.UseMiddleware<ExceptionMiddleware>(); // expcetion middleware odi najgore vo pipeline-ot
 
 if (app.Environment.IsDevelopment()) // Configuring Middleware pipeline for development environment
 {
@@ -57,7 +62,7 @@ if (app.Environment.IsDevelopment()) // Configuring Middleware pipeline for deve
 app.UseHttpsRedirection();
 
 
-// Configure the HTTP request pipeline. MIDDLEWARE
+
 
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
     .WithOrigins("http://localhost:4200","https://localhost:4200"));

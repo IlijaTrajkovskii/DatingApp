@@ -1,0 +1,27 @@
+
+
+<div class="flex justify-center gap-3">
+
+    <button class="btn btn-neutral" (click)="get500Error()">Test 500 Error</button>
+    <button class="btn btn-primary" (click)="get400Error()">Test 400 Error</button>
+    <button class="btn btn-accent" (click)="get401Error()">Test 401 Error</button>
+    <button class="btn btn-warning" (click)="get404Error()">Test 404 Error</button>
+    <button class="btn btn-error" (click)="get400ValidationError()">Test 400 Validation Error</button>
+
+</div>
+
+@if(validationErrors().length > 0)
+{
+    <div class="flex card bg-base-100 mt-5 p-3 rounded-2xl mx-auto w-1/2 ">
+
+        <ul class="flex flex-col text-red-600 space-y-3">
+            @for (error of validationErrors(); track $index)
+            {
+                <li>
+                    {{error}}
+                </li>
+            }
+        </ul>
+
+    </div>
+}
