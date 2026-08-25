@@ -8,7 +8,7 @@ namespace backendAPI.Middleware;
 public class ExceptionMiddleware(RequestDelegate next,
     ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
 {
-    
+    // go prakame http povikot natamu niz pipeline i ako ima exception vlaga vo catch blokot
     public async Task InvokeAsync(HttpContext context)
     {
         

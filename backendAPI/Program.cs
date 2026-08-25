@@ -23,6 +23,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddCors(); // dodavame Cors kako servis
 builder.Services.AddScoped<ITokenService,TokenService>();
+builder.Services.AddScoped<IMemberRepository,MemberRepository>();
 
 
 //avtentikacija definirame servisot
@@ -71,6 +72,25 @@ app.UseAuthentication(); // who are you ? 1st
 app.UseAuthorization(); // are you allowed to do what you are trying to do ? 2nd
 
 app.MapControllers();
+
+// pri stratup na app pravime automatski database i aplicirame pending migrations 
+// i seednuvame databazata ako e prazna so seedUsers
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+
+try
+{
+    var context = services.GetRequiredService<AppDbContext>();
+    await context.Database.MigrateAsync();       // create the database or apply pending migrations
+    await Seed.SeedUsers(context);              // seed the database
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occured during migrations!");
+    
+}
 
 app.Run();
 

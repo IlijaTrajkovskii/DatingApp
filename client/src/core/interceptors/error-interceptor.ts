@@ -9,6 +9,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const toast = inject(ToastService);
   const router = inject(Router);
 
+  // next(req) go prakja request-ot kon sledniot interceptor,
+  // ili kon backend-ot ako nema povekje interceptori.
+
+  // next(req) vrakja Observable so HTTP response.
+  // Ako toj Observable vrati error, catchError go faka.
+
   return next(req).pipe(
     catchError(error => {
 

@@ -1,6 +1,7 @@
 
 using backendAPI.Data;
 using backendAPI.Entities;
+using backendAPI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,26 +10,24 @@ namespace backendAPI.Controllers;
 
 
  // localhost:5001/api/members
-public class MembersController(AppDbContext context) : BaseApiController // inicijalizirame konstruktor so dbcontext instanca
+[Authorize]
+public class MembersController(IMemberRepository memberRepository) : BaseApiController // inicijalizirame konstruktor so dbcontext instanca
 {
 
     //endpoints 
 
     [HttpGet] // na get baranje na /api/members gi vrakja site korisnici
-    public async Task<ActionResult<IReadOnlyList<AppUser>>> getMembers()
+    public async Task<ActionResult<IReadOnlyList<Member>>> getMembers()
     {
-        var members = await context.Users.AsNoTracking().ToListAsync(); // async await 
-        // asNoTracking () se koristi koga samo vcituvame podatoci bez da gi menuvame (efficiency)
-
-
-        return members;
+    
+        return Ok(await memberRepository.GetMembersAsync());
     }
 
-    [Authorize]
+    
     [HttpGet("{id}")] // api/members/{id}   id=ilija-id
-    public async Task<ActionResult<AppUser>> getMember(string id)
+    public async Task<ActionResult<Member>> getMember(string id)
     {
-        var member =  await context.Users.FindAsync(id);   //find prebaruva po PK 
+        var member = await memberRepository.GetMemberByIdAsync(id);   //find prebaruva po PK 
         
 
         if(member == null) return NotFound();
@@ -36,6 +35,14 @@ public class MembersController(AppDbContext context) : BaseApiController // inic
         return member;
 
     }
+
+    [HttpGet("{id}/photos")]
+    public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
+    {
+        return Ok(await memberRepository.GetPhotosForMemberAsync(id));
+    }
+
+
 
 
 
