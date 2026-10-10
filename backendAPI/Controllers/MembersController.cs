@@ -36,7 +36,7 @@ public class MembersController(IMemberRepository memberRepository) : BaseApiCont
 
     }
 
-    [HttpGet("{id}/photos")]
+    [HttpGet("{id}/photos")]  //members/id/photos
     public async Task<ActionResult<IReadOnlyList<Photo>>> GetMemberPhotos(string id)
     {
         return Ok(await memberRepository.GetPhotosForMemberAsync(id));

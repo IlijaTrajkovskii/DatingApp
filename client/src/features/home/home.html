@@ -33,6 +33,7 @@
     } @else {
         <div class="flex w-full ">
            <app-register  
+                //Parent go slusha eventot, Koga childot ke emitne cancelRegister, "napravi go toa desno".
                 (cancelRegister)="showRegisterForm($event)"
                 class="w-full"
             />

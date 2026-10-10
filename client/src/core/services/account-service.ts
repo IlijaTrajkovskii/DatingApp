@@ -37,8 +37,8 @@ export class AccountService {
     }
 
     setCurrentUser(user: User) 
-    {                                                       // cross-site scripting
-        localStorage.setItem("user", JSON.stringify(user)) // Rizik od XSS attack! NOT SAFE
+    {                         //key     //value                             // cross-site scripting
+        localStorage.setItem("user", JSON.stringify(user))            // Rizik od XSS attack! NOT SAFE
         this.currentUser.set(user)
     }
 
