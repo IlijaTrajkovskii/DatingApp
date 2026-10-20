@@ -5,6 +5,7 @@ import { LoginCreds } from '../../types/user';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastService } from '../../core/services/toast-service';
 import { themes } from '../theme';
+import { BusyService } from '../../core/services/busy-service';
 
 @Component({
   selector: 'app-nav',
@@ -17,6 +18,7 @@ export class Nav implements OnInit {
   protected creds = {} as LoginCreds //pravime prazen objekt koj sto mu davame atributi vo template-ot 
  
   protected accountService = inject(AccountService);
+  protected busyService = inject(BusyService)
   protected toastService = inject(ToastService)
   private router = inject(Router);
 
@@ -38,6 +40,8 @@ export class Nav implements OnInit {
     const closeWindow = document.activeElement as HTMLDivElement   // elementot sto ima FOKUS 
     if(closeWindow) closeWindow.blur();
   }
+
+ 
 
 
   login()

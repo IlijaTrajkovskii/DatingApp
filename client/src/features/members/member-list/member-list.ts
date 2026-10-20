@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MemberService } from '../../../core/services/member-service';
 import { Observable } from 'rxjs';
 import { Member } from '../../../types/Member';
@@ -20,10 +20,10 @@ export class MemberList {
   private memberService = inject(MemberService);
   
   members$: Observable<Member[]>;
-
+  
   constructor()
   {
-    this.members$ = this.memberService.getMembers();
+    this.members$ = this.memberService.getMembers()
   }
 
  

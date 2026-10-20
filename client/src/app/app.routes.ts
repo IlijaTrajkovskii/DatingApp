@@ -12,6 +12,7 @@ import { MemberProfile } from '../features/members/member-profile/member-profile
 import { MemberPhotos } from '../features/members/member-photos/member-photos';
 import { MemberMessages } from '../features/members/member-messages/member-messages';
 import { memberResolver } from '../features/members/member-resolver';
+import { preventUnsavedChangesGuard } from '../core/guards/prevent-unsaved-changes-guard';
 
 export const routes: Routes = [
     { path: '', component: Home },
@@ -28,7 +29,7 @@ export const routes: Routes = [
                 component: MemberDetailed,
                 children : [
                     {path: '', redirectTo: 'profile', pathMatch: 'full'}, // vo slucaj koga bi otvorile samo members/123 avtomatski da odnese na profile, / koga sme na /members/123 nemame izbrano nitu eden child route pa redirect na profile
-                    {path: 'profile', component: MemberProfile, title: 'Profile'},
+                    {path: 'profile', component: MemberProfile, title: 'Profile', canDeactivate: [preventUnsavedChangesGuard]},
                     {path: 'photos', component: MemberPhotos, title: 'Photos'},
                     {path: 'messages', component: MemberMessages, title: 'Messages'}
                 ]

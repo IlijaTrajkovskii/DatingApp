@@ -18,6 +18,7 @@ public class TokenService(IConfiguration config) : ITokenService
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)); // pravime private key
 
+        // preku NameIdentifier go zimame id-to na userot pri update na user
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Email, user.Email),

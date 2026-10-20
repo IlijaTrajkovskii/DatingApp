@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
-import { Member, Photo } from '../../types/Member';
+import { inject, Service, signal } from '@angular/core';
+import { EditableMember, Member, Photo } from '../../types/Member';
 import { environment } from '../../environments/environment';
 import { AccountService } from './account-service';
+import { tap } from 'rxjs';
 
 @Service()
 export class MemberService {
@@ -12,7 +13,10 @@ export class MemberService {
 
     private baseUrl = environment.apiUrl;
 
-    // potrebno e da go ispratime jwt-to kako header 
+    //go stavame na servis za da bide globalno dostapen 
+    public editMode = signal(false);
+
+    public member = signal<Member | null>(null);
 
     getMembers() 
     {
@@ -21,12 +25,23 @@ export class MemberService {
 
     getMember(id: string)   //                   /api/members/ + {id}
     {
-       return this.http.get<Member>(this.baseUrl + '/members/' + id)
+       return this.http.get<Member>(this.baseUrl + '/members/' + id).pipe(
+        tap(member => {
+            this.member.set(member) // direktno go polnime signalot i e dostapen nasekade preku memberService
+        })
+       )   
+       
+
     }
 
     getMemberPhotos(id: string)
     {
         return this.http.get<Photo[]>(this.baseUrl + '/members/' + id + '/photos')
+    }
+
+    updateMember(member: EditableMember)
+    {
+        return this.http.put(this.baseUrl + '/members', member)
     }
     
 }

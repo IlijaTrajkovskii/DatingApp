@@ -12,6 +12,7 @@ export class AccountService {
     currentUser = signal<User | null>(null);
 
 
+    // tap go koristime za SideEffekt
     login(creds:LoginCreds)
     {
         return this.http.post<User>(this.baseUrl + 'account/login', creds).pipe(
