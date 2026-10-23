@@ -1,5 +1,6 @@
 using System.Text;
 using backendAPI.Data;
+using backendAPI.Helpers;
 using backendAPI.Interfaces;
 using backendAPI.Middleware;
 using backendAPI.Services;
@@ -22,9 +23,13 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 });
 
 builder.Services.AddCors(); // dodavame Cors kako servis
+
 builder.Services.AddScoped<ITokenService,TokenService>();
 builder.Services.AddScoped<IMemberRepository,MemberRepository>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 
+// getSection CloudinarySettings doagja od appsettings.json
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
 //avtentikacija definirame servisot
 

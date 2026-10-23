@@ -1,38 +1,86 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MemberService } from '../../../core/services/member-service';
-import { Observable } from 'rxjs';
-import { Photo } from '../../../types/Member';
-import { AsyncPipe } from '@angular/common';
+import { Member, Photo } from '../../../types/Member';
+import { ImageUpload } from '../../../shared/image-upload/image-upload';
+import { AccountService } from '../../../core/services/account-service';
+import { User } from '../../../types/user';
+import { StarButton } from '../../../shared/star-button/star-button';
+import { DeleteButton } from '../../../shared/delete-button/delete-button';
 
 @Component({
   selector: 'app-member-photos',
-  imports: [AsyncPipe],
+  imports: [ImageUpload, StarButton, DeleteButton],
   templateUrl: './member-photos.html',
   styleUrl: './member-photos.css',
 })
-export class MemberPhotos {
+export class MemberPhotos implements OnInit{
 
   private route = inject(ActivatedRoute)
-  private memberService = inject(MemberService)
+  protected memberService = inject(MemberService)
+  protected accountService = inject(AccountService)
 
-  protected photos$?: Observable<Photo[]>
+  protected photos = signal<Photo[] | null | undefined>(null) // za sekunda bidejki e inicijalizirano na [] ke pokaze deka e no photos available
+  protected loading = signal(false)
 
-  constructor()
-  {
+  ngOnInit(): void {
+
     const memberId = this.route.parent?.snapshot.paramMap.get('id')
 
     if(memberId)
     {
-      this.photos$ = this.memberService.getMemberPhotos(memberId)
+      this.memberService.getMemberPhotos(memberId).subscribe({
+        next: photos => this.photos.set(photos)
+      })
     }
+
   }
 
-  // samo za dummy sliki 
-  get photoMocks() {
-    return Array.from({length: 15}, (_, i) => ({
-      url: '/user.png'
-    }))
+  onUploadImage(file: File)
+  {
+    this.loading.set(true)
+
+    this.memberService.uploadPhoto(file).subscribe({
+      next: photo => {
+        this.memberService.editMode.set(false)
+        this.loading.set(false)
+        this.photos.update(photos => [...(photos ?? []), photo])     // nemozes da spreadnuvas potencijalno null, photos ili ako e null [] pa dodaj photo
+      },
+      error: error => {
+        console.log("error uploading image: ", error)
+        this.loading.set(false)
+      }
+    })
   }
+
+  setMainPhoto(photo: Photo)
+  {
+    this.memberService.setMainPhoto(photo).subscribe({
+      next: () => {
+        const currentUser = this.accountService.currentUser()
+        if(currentUser) 
+        {
+          currentUser.imageUrl = photo.url
+        }
+        this.accountService.setCurrentUser(currentUser as User)
+
+        this.memberService.member.update(member => ({
+          ...member,
+          imageUrl: photo.url
+        }) as Member)
+      }
+    })
+  }
+
+  deletePhoto(photoId: number)
+  {
+    this.memberService.deletePhoto(photoId).subscribe({
+      next: () => {
+        this.photos.update(photos => photos?.filter(x=> x.id != photoId))
+      }
+    })
+  }
+
+
 
 }
