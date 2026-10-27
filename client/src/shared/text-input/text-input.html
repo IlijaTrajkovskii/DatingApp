@@ -1,0 +1,46 @@
+<div class="flex flex-col">
+
+    <label class="floating-label">
+
+        <span>{{label()}}</span>
+
+        <input class="input w-full" 
+            [formControl]="control"
+            [type]="type()"
+            [placeholder]="label()"
+            [class.input-success]="control.valid && control.touched"
+            [class.input-error]="control.invalid && control.touched"
+            [max]="maxDate()">
+
+    </label>
+
+    @if(control.hasError('required') && control.touched) 
+    {
+     <div class="validation-hint text-error text-xs px-0.5 pt-1">{{label()}} is required</div>
+    }
+
+    @if(control.hasError('email') && control.touched) 
+    {
+     <div class="validation-hint text-error text-xs px-0.5 pt-1">Invalid e-mail address</div>
+    }
+
+    @if(control.hasError('minlength') && control.touched) 
+    {
+     <div class="validation-hint text-error text-xs px-0.5 pt-1">{{label()}} must be at least
+        {{control.errors?.['minlength'].requiredLength}} characters
+     </div>
+    }
+
+    @if(control.hasError('maxlength') && control.touched) 
+    {
+     <div class="validation-hint text-error text-xs px-0.5 pt-1">{{label()}} must be a maximum of
+        {{control.errors?.['maxlength'].requiredLength}} characters
+     </div>
+    }
+
+    @if(control.hasError('passwordMismatch') && control.touched) 
+    {
+     <div class="validation-hint text-error text-xs px-0.5 pt-1">Passwords do not match</div>
+    }
+
+</div>

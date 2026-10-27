@@ -74,13 +74,13 @@ public class MembersController(IMemberRepository memberRepository, IPhotoService
     }
 
     [HttpPost("add-photo")]
-    public async Task<ActionResult<Photo>> uploadPhoto([FromForm] IFormFile file)
+    public async Task<ActionResult<Photo>> UploadPhoto([FromForm] IFormFile file)
     {
         var member = await memberRepository.GetMemberForUpdate(User.GetMemberId()); // go zimame memberot zaedno so se Photos i User
 
         if(member == null) return BadRequest("Cannot update Member");
 
-        var result = await photoService.UploadPhotoAsync(file);
+        var result = await photoService.UploadPhotoAsync(file);  //uploadnuva na Cloudinary
 
         if(result.Error != null) return BadRequest(result.Error.Message);
 
